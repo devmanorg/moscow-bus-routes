@@ -27,7 +27,7 @@ def fetch_json_content(url, params=None):
         return None
 
 
-def get_route_geometry_info(route_id):
+def fetch_route_geometry_info(route_id):
     params = {
         'route_id': route_id,
     }
@@ -37,7 +37,7 @@ def get_route_geometry_info(route_id):
     )
 
 
-def get_route_stations_info(route_id):
+def fetch_route_stations_info(route_id):
     params = {
         'route_id': route_id,
     }
@@ -138,8 +138,8 @@ def main():
 
         print(f'Fetching info about {route_type} route #{route_name}...')
 
-        route_geometry_info = get_route_geometry_info(route_id=route_id)
-        route_stations_info = get_route_stations_info(route_id=route_id)
+        route_geometry_info = fetch_route_geometry_info(route_id=route_id)
+        route_stations_info = fetch_route_stations_info(route_id=route_id)
 
         route_ordered_coordinates = get_route_ordered_coordinates(
             source_route_coordinates=route_geometry_info['geom']['coordinates'],
