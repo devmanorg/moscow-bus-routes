@@ -6,14 +6,14 @@ import time
 import requests
 
 
-route_types = {
+ROUTE_TYPES = {
     1: 'bus',
     2: 'trolleybus',
     3: 'minibus_taxi',
     10: 'tram',
 }
 
-fetched_route_types = {1}
+FETCHED_ROUTE_TYPES = {1}
 
 
 def fetch_json_content(url, params=None):
@@ -116,12 +116,12 @@ def main():
         os.makedirs(base_output_path, exist_ok=True)
 
     for route_info in routes_info['routes']:
-        if route_info['type'] not in fetched_route_types:
+        if route_info['type'] not in FETCHED_ROUTE_TYPES:
             continue
 
         route_info_output_path = os.path.join(
             base_output_path,
-            route_types[route_info['type']],
+            ROUTE_TYPES[route_info['type']],
         )
         if not os.path.exists(route_info_output_path):
             os.mkdir(route_info_output_path)
@@ -134,7 +134,7 @@ def main():
             continue
 
         print(
-            f'Fetching info about {route_types[route_info["type"]]} '
+            f'Fetching info about {ROUTE_TYPES[route_info["type"]]} '
             f'route #{route_info["name"]}...',
         )
 
