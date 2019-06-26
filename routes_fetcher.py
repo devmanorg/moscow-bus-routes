@@ -86,13 +86,19 @@ def get_route_ordered_coordinates(source_route_coordinates):
 
 
 def get_output_route_info(
-        route_info, route_ordered_coordinates, route_stations_info):
+        route_info, route_coordinates_info, route_stations_info):
+    route_ordered_coordinates = get_route_ordered_coordinates(
+        source_route_coordinates=route_coordinates_info,
+    )
+    route_stations_essential_info = get_route_stations_essential_info(
+        route_stations_info=route_stations_info,
+    )
     return {
         'name': route_info['name'],
         'station_start_name': route_info['station_start_name'],
         'station_stop_name': route_info['station_stop_name'],
         'coordinates': route_ordered_coordinates,
-        'stations': route_stations_info,
+        'stations': route_stations_essential_info,
     }
 
 
@@ -141,18 +147,10 @@ def main():
         route_geometry_info = fetch_route_geometry_info(route_id=route_id)
         route_stations_info = fetch_route_stations_info(route_id=route_id)
 
-        route_ordered_coordinates = get_route_ordered_coordinates(
-            source_route_coordinates=route_geometry_info['geom']['coordinates'],
-        )
-
-        route_stations_essential_info = get_route_stations_essential_info(
-            route_stations_info=route_stations_info['stations'],
-        )
-
         output_route_info = get_output_route_info(
             route_info=route_info,
-            route_ordered_coordinates=route_ordered_coordinates,
-            route_stations_info=route_stations_essential_info,
+            route_coordinates_info=route_geometry_info['geom']['coordinates'],
+            route_stations_info=route_stations_info['stations'],
         )
         save_route_info(
             route_info=output_route_info,
