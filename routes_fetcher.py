@@ -37,6 +37,24 @@ def get_route_geometry_info(route_id):
     )
 
 
+def get_route_stations_info(route_id):
+    params = {
+        'route_id': route_id,
+    }
+    return fetch_json_content(
+        url='http://www.maxikarta.ru/msk/transport/query/stations',
+        params=params,
+    )
+
+
+def get_route_stations_essential_info(route_stations_info):
+    route_stations_essential_info = [
+        ((station['lat'], station['lon']), station['name'])
+        for station in route_stations_info
+    ]
+    return get_list_without_adjacent_identical_items(route_stations_essential_info)
+
+
 def get_list_without_adjacent_identical_items(source_list):
     output_list = []
 
@@ -67,12 +85,14 @@ def get_route_ordered_coordinates(source_route_coordinates):
     return get_list_without_adjacent_identical_items(route_ordered_coordinates)
 
 
-def get_output_route_info(route_info, route_ordered_coordinates):
+def get_output_route_info(
+        route_info, route_ordered_coordinates, route_stations_info):
     return {
         'name': route_info['name'],
         'station_start_name': route_info['station_start_name'],
         'station_stop_name': route_info['station_stop_name'],
         'coordinates': route_ordered_coordinates,
+        'stations': route_stations_info,
     }
 
 
@@ -124,9 +144,18 @@ def main():
         route_ordered_coordinates = get_route_ordered_coordinates(
             source_route_coordinates=route_geometry_info['geom']['coordinates'],
         )
+
+        route_stations_info = get_route_stations_info(
+            route_id=route_info['route_id']
+        )
+        route_stations_essential_info = get_route_stations_essential_info(
+            route_stations_info=route_stations_info['stations'],
+        )
+
         output_route_info = get_output_route_info(
             route_info=route_info,
             route_ordered_coordinates=route_ordered_coordinates,
+            route_stations_info=route_stations_essential_info,
         )
         save_route_info(
             route_info=output_route_info,
