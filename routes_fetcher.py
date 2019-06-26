@@ -116,38 +116,35 @@ def main():
         os.makedirs(base_output_path, exist_ok=True)
 
     for route_info in routes_info['routes']:
-        if route_info['type'] not in FETCHED_ROUTE_TYPES:
+        route_id = route_info['route_id']
+        route_type_id = route_info['type']
+        route_type = ROUTE_TYPES[route_type_id]
+        route_name = route_info['name']
+
+        if route_type_id not in FETCHED_ROUTE_TYPES:
             continue
 
-        route_info_output_path = os.path.join(
-            base_output_path,
-            ROUTE_TYPES[route_info['type']],
-        )
+        route_info_output_path = os.path.join(base_output_path, route_type)
+
         if not os.path.exists(route_info_output_path):
             os.mkdir(route_info_output_path)
 
         route_info_output_filepath = os.path.join(
             route_info_output_path,
-            f'{route_info["name"]}.json',
+            f'{route_name}.json',
         )
         if os.path.exists(route_info_output_filepath):
             continue
 
-        print(
-            f'Fetching info about {ROUTE_TYPES[route_info["type"]]} '
-            f'route #{route_info["name"]}...',
-        )
+        print(f'Fetching info about {route_type} route #{route_name}...')
 
-        route_geometry_info = get_route_geometry_info(
-            route_id=route_info['route_id'],
-        )
+        route_geometry_info = get_route_geometry_info(route_id=route_id)
+        route_stations_info = get_route_stations_info(route_id=route_id)
+
         route_ordered_coordinates = get_route_ordered_coordinates(
             source_route_coordinates=route_geometry_info['geom']['coordinates'],
         )
 
-        route_stations_info = get_route_stations_info(
-            route_id=route_info['route_id']
-        )
         route_stations_essential_info = get_route_stations_essential_info(
             route_stations_info=route_stations_info['stations'],
         )
