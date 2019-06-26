@@ -1,3 +1,4 @@
+import argparse
 import sys
 import os
 import json
@@ -107,9 +108,31 @@ def save_route_info(route_info, output_filepath):
         json.dump(route_info, file_object)
 
 
+def get_command_line_arguments():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '--output',
+        help='a base path for save info about routes',
+        default='routes_info',
+        type=str,
+    )
+    parser.add_argument(
+        '--sleep',
+        help='timeout between requests of info about routes (secs, default: 1s)',
+        default=1,
+        type=int,
+    )
+    command_line_arguments = parser.parse_args()
+
+    return command_line_arguments
+
+
 def main():
-    base_output_path = 'routes_info'
-    timeout_between_requests = 1
+    command_line_arguments = get_command_line_arguments()
+
+    base_output_path = command_line_arguments.output
+    timeout_between_requests = command_line_arguments.sleep
 
     routes_info = fetch_json_content(
         url='http://www.maxikarta.ru/msk/transport/query/routes',
