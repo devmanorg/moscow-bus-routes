@@ -85,7 +85,7 @@ def get_route_ordered_coordinates(source_route_coordinates):
     return get_list_without_adjacent_identical_items(route_ordered_coordinates)
 
 
-def get_output_route_info(
+def get_processed_route_info(
         route_info, route_coordinates_info, route_stations_info):
     route_ordered_coordinates = get_route_ordered_coordinates(
         source_route_coordinates=route_coordinates_info,
@@ -147,7 +147,7 @@ def main():
         route_geometry_info = fetch_route_geometry_info(route_id=route_id)
         route_stations_info = fetch_route_stations_info(route_id=route_id)
 
-        output_route_info = get_output_route_info(
+        output_route_info = get_processed_route_info(
             route_info=route_info,
             route_coordinates_info=route_geometry_info['geom']['coordinates'],
             route_stations_info=route_stations_info['stations'],
