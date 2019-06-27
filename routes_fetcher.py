@@ -116,7 +116,7 @@ def get_command_line_arguments():
 
     parser.add_argument(
         '--output',
-        help='a base path for save info about routes',
+        help='a base path for save info about routes (Default: routes_info)',
         default='routes_info',
         type=str,
     )
