@@ -69,7 +69,7 @@ Information about each route is saved to a JSON file which has following format:
 
 ```
 
-где:
+Where:
 
 * **name** - route name (or number)
 * **station_start_name**, **station_stop_name** - names of endpoint stations
