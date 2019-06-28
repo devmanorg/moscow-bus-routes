@@ -3,6 +3,7 @@ import sys
 import os
 import json
 import time
+from collections import deque
 
 import requests
 
@@ -72,24 +73,41 @@ def get_list_without_adjacent_identical_items(source_list):
     return output_list
 
 
-def get_list_without_duplicated_items(source_list):
-    output_list = []
-    set_of_items = set()
+def get_ordered_route_segments(source_route_segments):
+    segments_deque = deque(source_route_segments)
 
-    for item in source_list:
-        if item in set_of_items:
-            continue
+    list_of_continuous_segments = []
 
-        output_list.append(item)
-        set_of_items.add(item)
+    while segments_deque:
+        continuous_segments = []
 
-    return output_list
+        start_segment = segments_deque.popleft()
+
+        continuous_segments.append(start_segment)
+
+        for current_segment in continuous_segments:
+            next_segments = list(
+                filter(
+                    lambda item: tuple(current_segment[0]) == tuple(item[-1]),
+                    segments_deque,
+                ),
+            )
+            if next_segments:
+                next_segment = next_segments[0]
+                continuous_segments.append(next_segment)
+                segments_deque.remove(next_segment)
+
+        list_of_continuous_segments.append(continuous_segments)
+
+    return [segment for segments in list_of_continuous_segments for segment in segments]
 
 
-def get_ordered_coordinates_for_closed_route(source_route_coordinates):
+def get_ordered_coordinates_for_closed_route(source_route_segments):
     route_ordered_coordinates = []
 
-    for route_segment in source_route_coordinates:
+    ordered_route_segments = get_ordered_route_segments(source_route_segments)
+
+    for route_segment in ordered_route_segments:
         route_segment_ordered_coordinates = [
             (latitude, longitude) for longitude, latitude in reversed(route_segment)
         ]
@@ -97,18 +115,16 @@ def get_ordered_coordinates_for_closed_route(source_route_coordinates):
 
     route_ordered_coordinates.reverse()
 
-    route_ordered_coordinates = get_list_without_duplicated_items(route_ordered_coordinates)
-
     route_begin_coordinates = route_ordered_coordinates[0]
     route_ordered_coordinates.append(route_begin_coordinates)
 
-    return route_ordered_coordinates
+    return get_list_without_adjacent_identical_items(route_ordered_coordinates)
 
 
 def get_processed_route_info(
         route_info, route_coordinates_info, route_stations_info):
     route_ordered_coordinates = get_ordered_coordinates_for_closed_route(
-        source_route_coordinates=route_coordinates_info,
+        source_route_segments=route_coordinates_info,
     )
     route_stations_essential_info = get_route_stations_essential_info(
         route_stations_info=route_stations_info,
