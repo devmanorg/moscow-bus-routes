@@ -72,6 +72,20 @@ def get_list_without_adjacent_identical_items(source_list):
     return output_list
 
 
+def get_list_without_duplicated_items(source_list):
+    output_list = []
+    set_of_items = set()
+
+    for item in source_list:
+        if item in set_of_items:
+            continue
+
+        output_list.append(item)
+        set_of_items.add(item)
+
+    return output_list
+
+
 def get_ordered_coordinates_for_closed_route(source_route_coordinates):
     route_ordered_coordinates = []
 
@@ -83,10 +97,12 @@ def get_ordered_coordinates_for_closed_route(source_route_coordinates):
 
     route_ordered_coordinates.reverse()
 
+    route_ordered_coordinates = get_list_without_duplicated_items(route_ordered_coordinates)
+
     route_begin_coordinates = route_ordered_coordinates[0]
     route_ordered_coordinates.append(route_begin_coordinates)
 
-    return get_list_without_adjacent_identical_items(route_ordered_coordinates)
+    return route_ordered_coordinates
 
 
 def get_processed_route_info(
