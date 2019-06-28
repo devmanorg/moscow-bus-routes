@@ -103,22 +103,22 @@ def get_ordered_route_segments(source_route_segments):
 
 
 def get_ordered_coordinates_for_closed_route(source_route_segments):
-    route_ordered_coordinates = []
+    ordered_route_coordinates = []
 
     ordered_route_segments = get_ordered_route_segments(source_route_segments)
 
     for route_segment in ordered_route_segments:
-        route_segment_ordered_coordinates = [
+        ordered_route_segment_coordinates = [
             (latitude, longitude) for longitude, latitude in reversed(route_segment)
         ]
-        route_ordered_coordinates.extend(route_segment_ordered_coordinates)
+        ordered_route_coordinates.extend(ordered_route_segment_coordinates)
 
-    route_ordered_coordinates.reverse()
+    ordered_route_coordinates.reverse()
 
-    route_begin_coordinates = route_ordered_coordinates[0]
-    route_ordered_coordinates.append(route_begin_coordinates)
+    route_begin_coordinates = ordered_route_coordinates[0]
+    ordered_route_coordinates.append(route_begin_coordinates)
 
-    return get_list_without_adjacent_identical_items(route_ordered_coordinates)
+    return get_list_without_adjacent_identical_items(ordered_route_coordinates)
 
 
 def get_processed_route_info(
