@@ -123,7 +123,7 @@ def get_ordered_coordinates_for_closed_route(source_route_segments):
 
 def get_processed_route_info(
         route_info, route_coordinates_info, route_stations_info):
-    route_ordered_coordinates = get_ordered_coordinates_for_closed_route(
+    ordered_route_coordinates = get_ordered_coordinates_for_closed_route(
         source_route_segments=route_coordinates_info,
     )
     route_stations_essential_info = get_route_stations_essential_info(
@@ -133,7 +133,7 @@ def get_processed_route_info(
         'name': route_info['name'],
         'station_start_name': route_info['station_start_name'],
         'station_stop_name': route_info['station_stop_name'],
-        'coordinates': route_ordered_coordinates,
+        'coordinates': ordered_route_coordinates,
         'stations': route_stations_essential_info,
     }
 
