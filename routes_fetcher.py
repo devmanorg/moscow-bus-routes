@@ -88,7 +88,7 @@ def get_ordered_route_segments(source_route_segments):
         for current_segment in continuous_segments:
             next_segments = list(
                 filter(
-                    lambda item: tuple(current_segment[0]) == tuple(item[-1]),
+                    lambda segment: current_segment[0] == segment[-1],
                     segments_deque,
                 ),
             )
