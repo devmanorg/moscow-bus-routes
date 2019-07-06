@@ -182,13 +182,13 @@ def main():
     for route_info in routes_info['routes']:
         route_id = route_info['route_id']
         route_type_id = route_info['type']
-        route_type = ROUTE_TYPE_ID_TO_FOLDER_NAME[route_type_id]
+        output_folder_name = ROUTE_TYPE_ID_TO_FOLDER_NAME[route_type_id]
         route_name = route_info['name']
 
         if route_type_id not in FETCHED_ROUTE_TYPES:
             continue
 
-        route_info_output_path = os.path.join(base_output_path, route_type)
+        route_info_output_path = os.path.join(base_output_path, output_folder_name)
 
         if not os.path.exists(route_info_output_path):
             os.mkdir(route_info_output_path)
@@ -200,7 +200,7 @@ def main():
         if os.path.exists(route_info_output_filepath):
             continue
 
-        print(f'Fetching info about {route_type} route #{route_name}...')
+        print(f'Fetching info about route #{route_name}...')
 
         route_geometry_info = fetch_route_geometry_info(route_id=route_id)
         route_stations_info = fetch_route_stations_info(route_id=route_id)
