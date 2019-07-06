@@ -8,7 +8,7 @@ from collections import deque
 import requests
 
 
-ROUTE_TYPES = {
+ROUTE_TYPE_ID_TO_FOLDER_NAME = {
     1: 'bus',
     2: 'trolleybus',
     3: 'minibus_taxi',
@@ -182,7 +182,7 @@ def main():
     for route_info in routes_info['routes']:
         route_id = route_info['route_id']
         route_type_id = route_info['type']
-        route_type = ROUTE_TYPES[route_type_id]
+        route_type = ROUTE_TYPE_ID_TO_FOLDER_NAME[route_type_id]
         route_name = route_info['name']
 
         if route_type_id not in FETCHED_ROUTE_TYPES:
