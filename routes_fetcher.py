@@ -4,18 +4,26 @@ import os
 import json
 import time
 from collections import deque
+from enum import IntEnum
 
 import requests
 
 
-ROUTE_TYPE_ID_TO_FOLDER_NAME = {
-    1: 'bus',
-    2: 'trolleybus',
-    3: 'minibus_taxi',
-    10: 'tram',
+class RouteType(IntEnum):
+    BUS = 1
+    TROLLEYBUS = 2
+    MINIBUS_TAXI = 3
+    TRAM = 10
+
+
+ROUTE_TYPE_TO_FOLDER_NAME = {
+    RouteType.BUS: 'bus',
+    RouteType.TROLLEYBUS: 'trolleybus',
+    RouteType.MINIBUS_TAXI: 'minibus_taxi',
+    RouteType.TRAM: 'tram',
 }
 
-FETCHED_ROUTE_TYPES = {1}
+FETCHED_ROUTE_TYPES = {RouteType.BUS}
 
 
 def fetch_json_content(url, params=None):
@@ -181,11 +189,11 @@ def main():
 
     for route_info in routes_info['routes']:
         route_id = route_info['route_id']
-        route_type_id = route_info['type']
-        output_folder_name = ROUTE_TYPE_ID_TO_FOLDER_NAME[route_type_id]
+        route_type = route_info['type']
+        output_folder_name = ROUTE_TYPE_TO_FOLDER_NAME[route_type]
         route_name = route_info['name']
 
-        if route_type_id not in FETCHED_ROUTE_TYPES:
+        if route_type not in FETCHED_ROUTE_TYPES:
             continue
 
         route_info_output_path = os.path.join(base_output_path, output_folder_name)
