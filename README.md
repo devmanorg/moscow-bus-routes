@@ -18,7 +18,7 @@ $ pip install -r requirements.txt
 ```bash
 
 $ python routes_fetcher.py -h
-usage: routes_fetcher.py [-h] [--output OUTPUT] [--sleep SLEEP]
+usage: routes_fetcher.py [-h] [--output OUTPUT] [--sleep SLEEP] [--force]
 
 optional arguments:
   -h, --help       show this help message and exit
@@ -26,6 +26,8 @@ optional arguments:
                    routes_info)
   --sleep SLEEP    timeout between requests of info about routes (secs,
                    default: 1s)
+  --force          if set, then all existing files with info about routes will
+                   be overwritten
 
 ```
 
