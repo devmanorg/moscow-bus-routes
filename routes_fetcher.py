@@ -69,7 +69,7 @@ def get_list_without_adjacent_identical_items(source_list):
     output_list = []
 
     for item in source_list:
-        if len(output_list) == 0:
+        if not output_list:
             output_list.append(item)
             continue
 
