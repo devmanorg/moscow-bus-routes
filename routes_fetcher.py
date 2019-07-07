@@ -82,6 +82,14 @@ def get_list_without_adjacent_identical_items(source_list):
 
 
 def get_ordered_route_segments(source_route_segments):
+    """Performs ordering of route segments in order to obtain one or more
+    continuous trajectories describing the route geometry.
+
+    :param source_route_segments: A list of route segments that represents a
+        object of type MultiLineString of the GeoJSON format. More information
+        about the GeoJSON format can be found here:
+        https://tools.ietf.org/html/rfc7946
+    """
     segments_deque = deque(source_route_segments)
 
     list_of_continuous_segments = []
