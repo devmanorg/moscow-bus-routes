@@ -166,6 +166,11 @@ def get_command_line_arguments():
         default=1,
         type=int,
     )
+    parser.add_argument(
+        '--force',
+        help='if set, then all existing files with info about routes will be overwritten',
+        action='store_true',
+    )
     command_line_arguments = parser.parse_args()
 
     return command_line_arguments
@@ -176,6 +181,7 @@ def main():
 
     base_output_path = command_line_arguments.output
     timeout_between_requests = command_line_arguments.sleep
+    enable_force_mode = command_line_arguments.force
 
     routes_info = fetch_json_content(
         url='http://www.maxikarta.ru/msk/transport/query/routes',
@@ -205,7 +211,7 @@ def main():
             route_info_output_path,
             f'{route_name}.json',
         )
-        if os.path.exists(route_info_output_filepath):
+        if not enable_force_mode and os.path.exists(route_info_output_filepath):
             continue
 
         print(f'Fetching info about route #{route_name}...')
