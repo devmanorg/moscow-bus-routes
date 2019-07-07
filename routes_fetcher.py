@@ -173,6 +173,19 @@ def get_info_about_fetched_routes(all_routes_info, base_output_path):
     return fetched_routes_info
 
 
+def create_output_dirs(base_output_path):
+    if not os.path.exists(base_output_path):
+        os.makedirs(base_output_path, exist_ok=True)
+
+    for route_type in FETCHED_ROUTE_TYPES:
+        route_info_output_path = os.path.join(
+            base_output_path,
+            ROUTE_TYPE_TO_FOLDER_NAME[route_type],
+        )
+        if not os.path.exists(route_info_output_path):
+            os.mkdir(route_info_output_path)
+
+
 def save_route_info(route_info, output_filepath):
     with open(output_filepath, 'w') as file_object:
         json.dump(route_info, file_object)
@@ -222,16 +235,7 @@ def main():
         base_output_path=base_output_path,
     )
 
-    if not os.path.exists(base_output_path):
-        os.makedirs(base_output_path, exist_ok=True)
-
-    for route_type in FETCHED_ROUTE_TYPES:
-        route_info_output_path = os.path.join(
-            base_output_path,
-            ROUTE_TYPE_TO_FOLDER_NAME[route_type],
-        )
-        if not os.path.exists(route_info_output_path):
-            os.mkdir(route_info_output_path)
+    create_output_dirs(base_output_path=base_output_path)
 
     for route_info in fetched_routes_info:
         route_id = route_info['id']
