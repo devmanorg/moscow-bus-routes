@@ -196,7 +196,7 @@ def create_output_dirs(base_output_path):
 
 def save_route_info(route_info, output_filepath):
     with open(output_filepath, 'w') as file_object:
-        json.dump(route_info, file_object)
+        json.dump(route_info, file_object, ensure_ascii=False, indent=2)
 
 
 def get_command_line_arguments():
