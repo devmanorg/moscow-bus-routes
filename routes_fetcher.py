@@ -239,9 +239,9 @@ def main():
 
     for route_info in fetched_routes_info:
         route_id = route_info['id']
-        route_info_output_filepath = route_info['output_filepath']
+        output_filepath = route_info['output_filepath']
 
-        if not enable_force_mode and os.path.exists(route_info_output_filepath):
+        if not enable_force_mode and os.path.exists(output_filepath):
             continue
 
         print(f'Fetching info about route #{route_info["name"]}...')
@@ -256,7 +256,7 @@ def main():
         )
         save_route_info(
             route_info=output_route_info,
-            output_filepath=route_info_output_filepath,
+            output_filepath=output_filepath,
         )
         time.sleep(timeout_between_requests)
 
