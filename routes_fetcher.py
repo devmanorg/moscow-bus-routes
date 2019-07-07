@@ -146,6 +146,33 @@ def get_processed_route_info(
     }
 
 
+def get_info_about_fetched_routes(all_routes_info, base_output_path):
+    fetched_routes_info = []
+
+    for route_info in all_routes_info['routes']:
+        route_type = route_info['type']
+        output_folder_name = ROUTE_TYPE_TO_FOLDER_NAME[route_type]
+        route_name = route_info['name']
+
+        if route_type not in FETCHED_ROUTE_TYPES:
+            continue
+
+        output_filepath = os.path.join(
+            os.path.join(base_output_path, output_folder_name),
+            f'{route_name}.json',
+        )
+        fetched_routes_info.append(
+            {
+                'id': route_info['route_id'],
+                'name': route_name,
+                'station_start_name': route_info['station_start_name'],
+                'station_stop_name': route_info['station_stop_name'],
+                'output_filepath': output_filepath,
+            },
+        )
+    return fetched_routes_info
+
+
 def save_route_info(route_info, output_filepath):
     with open(output_filepath, 'w') as file_object:
         json.dump(route_info, file_object)
@@ -183,38 +210,37 @@ def main():
     timeout_between_requests = command_line_arguments.sleep
     enable_force_mode = command_line_arguments.force
 
-    routes_info = fetch_json_content(
+    all_routes_info = fetch_json_content(
         url='http://www.maxikarta.ru/msk/transport/query/routes',
     )
 
-    if routes_info is None:
+    if all_routes_info is None:
         sys.exit('Could not get info about routes. Check your internet connection')
+
+    fetched_routes_info = get_info_about_fetched_routes(
+        all_routes_info=all_routes_info,
+        base_output_path=base_output_path,
+    )
 
     if not os.path.exists(base_output_path):
         os.makedirs(base_output_path, exist_ok=True)
 
-    for route_info in routes_info['routes']:
-        route_id = route_info['route_id']
-        route_type = route_info['type']
-        output_folder_name = ROUTE_TYPE_TO_FOLDER_NAME[route_type]
-        route_name = route_info['name']
-
-        if route_type not in FETCHED_ROUTE_TYPES:
-            continue
-
-        route_info_output_path = os.path.join(base_output_path, output_folder_name)
-
+    for route_type in FETCHED_ROUTE_TYPES:
+        route_info_output_path = os.path.join(
+            base_output_path,
+            ROUTE_TYPE_TO_FOLDER_NAME[route_type],
+        )
         if not os.path.exists(route_info_output_path):
             os.mkdir(route_info_output_path)
 
-        route_info_output_filepath = os.path.join(
-            route_info_output_path,
-            f'{route_name}.json',
-        )
+    for route_info in fetched_routes_info:
+        route_id = route_info['id']
+        route_info_output_filepath = route_info['output_filepath']
+
         if not enable_force_mode and os.path.exists(route_info_output_filepath):
             continue
 
-        print(f'Fetching info about route #{route_name}...')
+        print(f'Fetching info about route #{route_info["name"]}...')
 
         route_geometry_info = fetch_route_geometry_info(route_id=route_id)
         route_stations_info = fetch_route_stations_info(route_id=route_id)
