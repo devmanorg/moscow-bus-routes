@@ -39,6 +39,24 @@ $ python routes_fetcher.py
 
 ```
 
+## How to launch tests
+
+For launch tests you need to install specific dependencies:
+
+```bash
+
+$ pip install -r requirements-test.txt
+
+```
+
+and then execute command for tests launch:
+
+```bash
+
+$ pytest
+
+```
+
 ## Output file format description
 
 Information about each route is saved to a JSON file which has following format:
